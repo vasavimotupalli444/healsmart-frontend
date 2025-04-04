@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Analysis</title>
+    <style>
+        body {
+            background-color: #E6CCFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: #EAD1FF;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+        h2 {
+            color: #7A00E6;
+        }
+        p {
+            color: #333;
+        }
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #7A00E6;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            background-color: #A34BE6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #7A00E6;
+        }
+        .result {
+            margin-top: 15px;
+            color: #7A00E6;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Symptom Analysis</h2>
+        <p>Experience instant clarity with our Symptom Analysis feature. Just enter your symptoms, and within moments, receive precise recommendations and insights tailored to you.</p>
+        <input type="text" id="symptom" placeholder="Enter symptom">
+        <select id="factor">
+            <option value="">Select related factor</option>
+            <option value="abdominal_pain">Abdominal pain in adults</option>
+            <option value="blood_stool">Blood in stool in adults</option>
+            <option value="chest_pain">Chest pain in adults</option>
+            <option value="cough">Cough in adults</option>
+            <option value="dizziness">Dizziness in adults</option>
+            <option value="eye_discomfort">Eye discomfort in adults</option>
+            <option value="headaches">Headaches in adults</option>
+            <option value="low_back_pain">Low back pain in adults</option>
+            <option value="nausea">Nausea or vomiting in adults</option>
+            <option value="shortness_breath">Shortness of breath in adults</option>
+            <option value="sore_throat">Sore throat in adults</option>
+            <option value="urinary_problems">Urinary problems in adults</option>
+            <option value="wheezing">Wheezing in adults</option>
+        </select>
+        <br>
+        <button onclick="analyzeSymptom()">Analyze</button>
+        <p class="result" id="result"></p>
+        <p class="suggestion" id="suggestion" style="color: #7A00E6; font-weight: bold;"></p>
+    </div>
+    
+    <script>
+        function analyzeSymptom() {
+            let symptom = document.getElementById("symptom").value;
+            let factor = document.getElementById("factor").value;
+            let suggestions = {
+                "abdominal_pain": "Try avoiding spicy foods and drink plenty of water.",
+                "blood_stool": "Consult a doctor immediately for further diagnosis.",
+                "chest_pain": "If severe, seek medical attention immediately.",
+                "cough": "Stay hydrated and try warm teas with honey.",
+                "dizziness": "Make sure you're well-hydrated and avoid sudden movements.",
+                "eye_discomfort": "Use lubricating eye drops and rest your eyes.",
+                "headaches": "Try resting in a dark room and drink plenty of water.",
+                "low_back_pain": "Apply a warm compress and maintain proper posture.",
+                "nausea": "Eat small, bland meals and stay hydrated.",
+                "shortness_breath": "Practice deep breathing exercises and seek medical help if persistent.",
+                "sore_throat": "Gargle with warm salt water and drink herbal teas.",
+                "urinary_problems": "Drink cranberry juice and maintain proper hygiene.",
+                "wheezing": "Use a humidifier and avoid allergens. Seek help if severe."
+            };
+            
+            if (symptom) {
+                let resultText = `Analysis for: ${symptom}`;
+                let suggestionText = "";
+                if (factor) {
+                    resultText += `\nRelated Factor: ${factor.replace(/_/g, ' ')}`;
+                    suggestionText = suggestions[factor] || "Consult a healthcare provider for further guidance.";
+                } else {
+                    suggestionText = "Please select a related factor for better recommendations.";
+                }
+                document.getElementById("result").innerText = resultText;
+                document.getElementById("suggestion").innerText = suggestionText;
+            } else {
+                document.getElementById("result").innerText = "Please enter a symptom.";
+                document.getElementById("suggestion").innerText = "";
+            }
+        }
+    </script>
+</body>
+</html>

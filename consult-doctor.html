@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consult a Doctor</title>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a0dad, #c084fc);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        #filter {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background: white;
+            color: black;
+            cursor: pointer;
+        }
+        .doctor-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+        .doctor-card:hover {
+            transform: scale(1.05);
+        }
+        .doctor-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .doctor-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .book-btn {
+            background-color: #6a0dad;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .form-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            color: black;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #6a0dad;
+        }
+        .close-btn {
+            background-color: red;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Consult a Doctor</h2>
+    <div class="filter-container">
+        <select id="filter">
+            <option value="all">All Specialties</option>
+            <option value="general">General Physician</option>
+            <option value="cardiologist">Cardiologist</option>
+            <option value="dermatologist">Dermatologist</option>
+            <option value="neurologist">Neurologist</option>
+            <option value="psychiatrist">Psychiatrist</option>
+            <option value="orthopedic">Orthopedic</option>
+            <option value="pediatrician">Pediatrician</option>
+            <option value="gynecologist">Gynecologist</option>
+            <option value="endocrinologist">Endocrinologist</option>
+            <option value="ophthalmologist">Ophthalmologist</option>
+        </select>
+    </div>
+
+    <div id="doctors-list" class="doctor-list"></div>
+
+    <!-- Appointment Form -->
+    <div class="form-container" id="appointmentForm">
+        <h3>Book Appointment</h3>
+        <p id="doctor-name"></p>
+        <form onsubmit="submitForm(event)">
+            <input type="text" id="patient-name" placeholder="Your Name" required>
+            <input type="number" id="patient-age" placeholder="Your Age" required>
+            <input type="text" id="patient-contact" placeholder="Contact Number" required>
+            <select id="time-slot" required>
+                <option value="" disabled selected>Select Time Slot</option>
+                <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                <option value="2:00 PM - 3:00 PM">2:00 PM - 3:00 PM</option>
+                <option value="3:00 PM - 4:00 PM">3:00 PM - 4:00 PM</option>
+                <option value="5:00 PM - 6:00 PM">5:00 PM - 6:00 PM</option>
+            </select>
+            <button type="submit" class="book-btn">Confirm Appointment</button>
+        </form>
+        <button class="close-btn" onclick="closeForm()">Cancel</button>
+    </div>
+
+    <script>
+        const doctors = [
+            {name: "Dr. Maya Iyer", specialty: "neurologist", experience: "1 year", rating: "⭐ ⭐ ⭐ ⭐ ☆", location: "Agartala", image: "https://img.freepik.com/free-photo/beautiful-young-female-doctor-looking-camera-office_1301-7807.jpg"},
+            {name: "Dr. Kavita Reddy", specialty: "endocrinologist", experience: "7 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Mumbai", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8vSRSoGYohA2SWO0qLf784n1Lrq52HL7LdA&s"},
+            {name: "Dr. Raj Malhotra", specialty: "cardiologist", experience: "10 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Delhi", image: "https://starhospitalsproduction.s3.amazonaws.com/ZuvcM107uvS5864ys2btRmPEh09ld9pRl31JQjKW.jpg"},
+            {name: "Dr. Sneha Verma", specialty: "ophthalmologist", experience: "8 years", rating: "⭐ ⭐ ⭐ ⭐ ☆", location: "Bangalore", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2EXonlk1SFj5Kn8_gCYm0nbeWA5xfwZQv6g&s"},
+            {name: "Dr. Priya Nair", specialty: "pediatrician", experience: "9 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Chennai", image: "https://img.freepik.com/free-photo/female-doctor-with-stethoscope_1301-7806.jpg"},
+            {name: "Dr. Amit Khanna", specialty: "orthopedic", experience: "12 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Pune", image: "https://img.freepik.com/free-photo/young-indian-male-doctor-with-crossed-arms_1157-48142.jpg"},
+            {name: "Dr. Roshni Gupta", specialty: "gynecologist", experience: "5 years", rating: "⭐ ⭐ ⭐ ⭐ ☆", location: "Hyderabad", image: "https://img.freepik.com/free-photo/doctor-smiling-with-stethoscope_23-2149411439.jpg"},
+            {name: "Dr. Vikram Patel", specialty: "psychiatrist", experience: "8 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Jaipur", image: "https://img.freepik.com/free-photo/cheerful-male-doctor-smiling-hospital-corridor_1262-12870.jpg"},
+            {name: "Dr. Neha Desai", specialty: "general", experience: "6 years", rating: "⭐ ⭐ ⭐ ⭐ ☆", location: "Lucknow", image: "https://img.freepik.com/free-photo/portrait-successful-smiling-doctor-holding-papers_23-2149390688.jpg"},
+            {name: "Dr. Arjun Mehta", specialty: "dermatologist", experience: "15 years", rating: "⭐ ⭐ ⭐ ⭐ ⭐", location: "Ahmedabad", image: "https://img.freepik.com/free-photo/happy-young-male-doctor-with-clipboard-standing-hallway-hospital_1262-13169.jpg"}
+        ];
+
+        function loadDoctors(specialty = "all") {
+            const doctorList = document.getElementById("doctors-list");
+            doctorList.innerHTML = "";
+            doctors.forEach(doctor => {
+                if (specialty === "all" || doctor.specialty === specialty) {
+                    doctorList.innerHTML += `
+                        <div class="doctor-card">
+                            <img src="${doctor.image}" alt="Doctor Image">
+                            <h3>${doctor.name}</h3>
+                            <p>${doctor.specialty} | ${doctor.experience}</p>
+                            <p>${doctor.rating}</p>
+                            <p>Location: ${doctor.location}</p>
+                            <button class="book-btn" onclick="openForm('${doctor.name}')">Book Appointment</button>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function openForm(doctorName) {
+            document.getElementById("appointmentForm").style.display = "block";
+            document.getElementById("doctor-name").innerText = "Doctor: " + doctorName;
+        }
+
+        function closeForm() {
+            document.getElementById("appointmentForm").style.display = "none";
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            alert("Appointment Successfully Booked!");
+            closeForm();
+        }
+
+        document.getElementById("filter").addEventListener("change", function() {
+            loadDoctors(this.value);
+        });
+
+        loadDoctors();
+    </script>
+</body>
+</html>
